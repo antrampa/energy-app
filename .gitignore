@@ -2,3 +2,4 @@
 node_modules
 energy.db-wal
 energy.db-shm
+energy.db
