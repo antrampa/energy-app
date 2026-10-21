@@ -1,0 +1,16 @@
+<%- include('partials/header') %>
+<div class="card narrow">
+  <h1>Create account</h1>
+  <form method="post" action="/register">
+    <label>Email <input type="email" name="email" required></label>
+    <label>Password <input type="password" name="password" minlength="8" required></label>
+    <label>Confirm password <input type="password" name="confirm" minlength="8" required></label>
+    <button>Register</button>
+  </form>
+  <% if (googleEnabled) { %>
+    <div class="divider">or</div>
+    <a class="btn google" href="/auth/google">Sign up with Google</a>
+  <% } %>
+  <p class="muted">Already registered? <a href="/login">Log in</a></p>
+</div>
+<%- include('partials/footer') %>

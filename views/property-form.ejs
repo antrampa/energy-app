@@ -1,0 +1,15 @@
+<%- include('partials/header') %>
+<div class="card narrow">
+  <h1><%= property.id ? 'Edit property' : 'New property' %></h1>
+  <form method="post" action="<%= property.id ? '/properties/' + property.id : '/properties' %>">
+    <label>Name (e.g. "Home", "Summer house") <input name="name" value="<%= property.name || '' %>" required></label>
+    <label>Address <input name="address" value="<%= property.address || '' %>"></label>
+    <label>People living in the house <input type="number" min="1" name="residents" value="<%= property.residents || 1 %>"></label>
+    <label>Electrical devices
+      <textarea name="devices" rows="3" placeholder="e.g. Fridge, 2× A/C, electric water heater, washing machine, oven"><%= property.devices || '' %></textarea>
+    </label>
+    <label>Other details <textarea name="notes" rows="2" placeholder="e.g. 85 m², solar panels, heat pump"><%= property.notes || '' %></textarea></label>
+    <button>Save</button>
+  </form>
+</div>
+<%- include('partials/footer') %>

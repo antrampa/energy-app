@@ -1,0 +1,19 @@
+<%- include('partials/header') %>
+<div class="card narrow">
+  <h1>Your profile</h1>
+  <p class="muted"><%= user.email %></p>
+  <form method="post" action="/profile">
+    <label>Full name <input name="full_name" value="<%= user.full_name || '' %>" required></label>
+    <label>Phone <input name="phone" value="<%= user.phone || '' %>"></label>
+    <label>Country <input name="country" value="<%= user.country || '' %>"></label>
+    <label>Currency
+      <select name="currency">
+        <% ['EUR','USD','GBP'].forEach(c => { %>
+          <option <%= user.currency === c ? 'selected' : '' %>><%= c %></option>
+        <% }) %>
+      </select>
+    </label>
+    <button>Save profile</button>
+  </form>
+</div>
+<%- include('partials/footer') %>

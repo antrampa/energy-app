@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Energy Tracker</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<nav>
+  <a href="/" class="brand">⚡ Energy Tracker</a>
+  <% if (user) { %>
+    <span class="nav-links">
+      <a href="/dashboard">Dashboard</a>
+      <a href="/profile">Profile</a>
+      <form method="post" action="/logout" class="inline"><button class="link">Log out</button></form>
+    </span>
+  <% } %>
+</nav>
+<main>
+<% errors.forEach(m => { %><div class="alert error"><%= m %></div><% }) %>
+<% successes.forEach(m => { %><div class="alert ok"><%= m %></div><% }) %>
