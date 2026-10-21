@@ -1,1 +1,4 @@
 /.env
+node_modules_DELETE
+energy.db-wal_DELETE
+energy_DELETE.db-shm
