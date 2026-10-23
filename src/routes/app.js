@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const db = require('../db');
 const { ensureAuth } = require('../auth');
+const { buildMonthlyData } = require('../monthly');
 
 router.use(ensureAuth);
 
@@ -20,7 +21,10 @@ router.get('/dashboard', (req, res) => {
     SELECT p.*, COUNT(c.id) AS entries, IFNULL(SUM(c.kwh),0) AS total_kwh, IFNULL(SUM(c.amount_paid),0) AS total_paid
     FROM properties p LEFT JOIN consumptions c ON c.property_id = p.id
     WHERE p.user_id = ? GROUP BY p.id ORDER BY p.name`).all(req.user.id);
-  res.render('dashboard', { properties });
+  const entries = db.prepare(`
+    SELECT c.*, p.name AS property_name FROM consumptions c
+    JOIN properties p ON p.id = c.property_id WHERE p.user_id = ?`).all(req.user.id);
+  res.render('dashboard', { properties, chart: buildMonthlyData(entries) });
 });
 
 // ---------- Properties ----------

@@ -6,6 +6,21 @@
 <% if (!properties.length) { %>
   <div class="card"><p>No properties yet. Add your home to start tracking consumption.</p></div>
 <% } %>
+<% if (chart.years.length) { %>
+<div class="card">
+  <div class="row">
+    <h2>Monthly consumption</h2>
+    <label class="inline-label">Year
+      <select id="yearSelect">
+        <% chart.years.forEach(y => { %><option value="<%= y %>"><%= y %></option><% }) %>
+      </select>
+    </label>
+  </div>
+  <div class="chart-box"><canvas id="monthlyChart"></canvas></div>
+  <p class="muted small">Yearly and date-range entries are spread over their months by number of days.</p>
+</div>
+<% } %>
+
 <div class="grid">
 <% properties.forEach(p => { %>
   <a class="card prop" href="/properties/<%= p.id %>">
@@ -16,4 +31,44 @@
   </a>
 <% }) %>
 </div>
+
+<% if (chart.years.length) { %>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script>
+  const DATA = <%- JSON.stringify(chart.byYear).replace(/</g, '\\u003c') %>;
+  const CURRENCY = <%- JSON.stringify(user.currency || 'EUR') %>;
+  const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const COLORS = ['#12355b', '#2a9d8f', '#e9c46a', '#8e5ea2', '#e76f51', '#4a90d9'];
+
+  let chart;
+  function draw(year) {
+    const d = DATA[year];
+    const datasets = d.properties.map((p, i) => ({
+      type: 'bar', label: p.name + ' (kWh)', data: p.kwh,
+      backgroundColor: COLORS[i % COLORS.length], stack: 'kwh', yAxisID: 'y', borderRadius: 4,
+    }));
+    datasets.push({
+      type: 'line', label: 'Paid (' + CURRENCY + ')', data: d.paid,
+      borderColor: '#e76f51', backgroundColor: '#e76f51', yAxisID: 'y2', tension: 0.3, pointRadius: 4,
+    });
+    if (chart) chart.destroy();
+    chart = new Chart(document.getElementById('monthlyChart'), {
+      data: { labels: MONTHS, datasets },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        scales: {
+          x: { stacked: true, grid: { display: false } },
+          y: { stacked: true, beginAtZero: true, title: { display: true, text: 'kWh' } },
+          y2: { position: 'right', beginAtZero: true, grid: { drawOnChartArea: false }, title: { display: true, text: CURRENCY } },
+        },
+        plugins: { legend: { position: 'bottom' } },
+      },
+    });
+  }
+  const sel = document.getElementById('yearSelect');
+  sel.addEventListener('change', () => draw(sel.value));
+  draw(sel.value);
+</script>
+<% } %>
 <%- include('partials/footer') %>

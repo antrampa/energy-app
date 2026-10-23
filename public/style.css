@@ -28,5 +28,9 @@ button.link.danger { color: #c0392b; }
 .alert { padding: 10px 14px; border-radius: 6px; margin-bottom: 14px; }
 .alert.error { background: #fde8e6; color: #8e2a1f; }
 .alert.ok { background: #e3f6e8; color: #1e6b34; }
+.chart-box { position: relative; height: 340px; }
+.inline-label { display: flex; align-items: center; gap: 8px; margin: 0; }
+.inline-label select { width: auto; margin: 0; }
+.small { font-size: 13px; }
 table { width: 100%; border-collapse: collapse; }
 th, td { text-align: left; padding: 8px; border-bottom: 1px solid #eef1f4; }
