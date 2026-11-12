@@ -8,6 +8,8 @@ const db = require('./db');
 const { passport } = require('./auth');
 
 const app = express();
+const isProd = process.env.NODE_ENV === 'production';
+if (isProd) app.set('trust proxy', 1); // behind Nginx
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, '..', 'views'));
 app.use(express.static(path.join(__dirname, '..', 'public')));
@@ -18,7 +20,7 @@ app.use(session({
   secret: process.env.SESSION_SECRET || 'change-me',
   resave: false,
   saveUninitialized: false,
-  cookie: { httpOnly: true, sameSite: 'lax', maxAge: 1000 * 60 * 60 * 24 * 7 },
+  cookie: { httpOnly: true, sameSite: 'lax', secure: isProd, maxAge: 1000 * 60 * 60 * 24 * 7 },
 }));
 app.use(flash());
 app.use(passport.initialize());
